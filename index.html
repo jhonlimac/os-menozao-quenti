@@ -252,45 +252,152 @@
   .links {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 12px;
+  }
+
+  /* Botões: vidro escuro, borda de luz giratória, brilho que segue o mouse e inclinação 3D */
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes borderSpin {
+    to { --angle: 360deg; }
+  }
+
+  @keyframes linkIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes linkRipple {
+    to { transform: translate(-50%, -50%) scale(30); opacity: 0; }
   }
 
   .link {
+    --accent: 255, 255, 255;
+    --rx: 0deg;
+    --ry: 0deg;
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 16px 0;
+    gap: 14px;
+    padding: 18px 0;
     text-decoration: none;
-    color: #888;
+    color: #b5b5b5;
     font-size: 13px;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
+    transition: transform 0.2s ease-out, color 0.2s, border-color 0.25s, box-shadow 0.25s;
     cursor: pointer;
-    background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
     width: 100%;
     font-family: inherit;
+    animation: linkIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   }
 
-  .link:first-child {
-    border-top: 1px solid rgba(255,255,255,0.05);
+  .link:nth-child(1) { --accent: 102, 192, 244; animation-delay: 0.1s; }
+  .link:nth-child(2) { --accent: 30, 215, 96; animation-delay: 0.2s; }
+  .link:nth-child(3) { --accent: 225, 48, 108; animation-delay: 0.3s; }
+  .link:nth-child(4) { --accent: 190, 190, 255; animation-delay: 0.4s; }
+
+  /* reflexo de luz que atravessa o botão */
+  .link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.16), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  /* borda de luz que gira ao redor do botão */
+  .link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(from var(--angle), transparent 0%, transparent 60%, rgba(var(--accent), 0.95) 82%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+    animation: borderSpin 2.5s linear infinite;
+    pointer-events: none;
+  }
+
+  .link:hover::before {
+    left: 140%;
+  }
+
+  .link:hover::after {
+    opacity: 1;
   }
 
   .link:hover {
     color: #fff;
-    background: rgba(255,255,255,0.03);
+    transform: perspective(700px) translateY(-4px) scale(1.03) rotateX(var(--rx)) rotateY(var(--ry));
+    border-color: rgba(var(--accent), 0.55);
+    background:
+      radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(var(--accent), 0.3), transparent 65%),
+      linear-gradient(135deg, rgba(var(--accent), 0.14), rgba(var(--accent), 0.03));
+    box-shadow: 0 12px 34px rgba(var(--accent), 0.28), 0 0 22px rgba(var(--accent), 0.22), inset 0 1px 0 rgba(255,255,255,0.12);
   }
 
+  .link:active {
+    transform: perspective(700px) translateY(0) scale(0.97);
+  }
+
+  /* ícones dentro de um círculo na cor de cada rede */
   .link i {
-    font-size: 16px;
-    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 15px;
     text-align: center;
+    color: rgba(var(--accent), 0.95);
+    background: rgba(var(--accent), 0.12);
+    transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
+  }
+
+  .link:hover i {
+    transform: scale(1.15) rotate(-8deg);
+    background: rgba(var(--accent), 0.25);
+    box-shadow: 0 0 16px rgba(var(--accent), 0.6);
+  }
+
+  /* onda ao clicar */
+  .link .ripple {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(var(--accent), 0.45);
+    transform: translate(-50%, -50%) scale(0);
+    animation: linkRipple 0.65s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .link, .link::before, .link::after { animation: none; transition: none; }
   }
 
   .copy-feedback {
@@ -373,13 +480,13 @@
     <a class="link" href="https://steamcommunity.com/id/alakiban/" target="_blank"><i class="fa-brands fa-steam"></i>Steam</a>
     <a class="link" href="https://open.spotify.com/user/31kcnovulikf4fcv5umkqtfclvy4" target="_blank"><i class="fa-brands fa-spotify"></i>Spotify</a>
     <a class="link" href="https://www.instagram.com/joao_lima.c" target="_blank"><i class="fa-brands fa-instagram"></i>Instagram</a>
-    <a class="link" onclick="copyEpicNick()">Epic Games</a>
+    <a class="link" onclick="copyEpicNick()"><i class="fa-solid fa-gamepad"></i>Epic Games</a>
   </div>
 </div>
 
 <div class="copy-feedback" id="copyFeedback">nick copiado pae</div>
 
-<audio id="bgMusic" src="main.mp3" preload="auto"></audio>
+<audio id="bgMusic" preload="auto"></audio>
 
 <script>
 // Snow effect
@@ -450,7 +557,26 @@ function showCopyFeedback() {
   const audio = document.getElementById('bgMusic');
   const progress = document.getElementById('playerProgress');
   const events = ['click', 'touchend', 'keydown'];
+  // Lista de músicas (todas na mesma pasta do index.html).
+  // Uma é sorteada toda vez que a página abre; ao terminar, sorteia outra.
+  const playlist = ['main.mp3'];
+  let currentTrack = Math.floor(Math.random() * playlist.length);
+  audio.src = playlist[currentTrack];
   let started = false;
+
+  function playNextRandom() {
+    let next = Math.floor(Math.random() * playlist.length);
+    if (playlist.length > 1) {
+      while (next === currentTrack) {
+        next = Math.floor(Math.random() * playlist.length);
+      }
+    }
+    currentTrack = next;
+    audio.src = playlist[currentTrack];
+    audio.play().catch(function() {});
+  }
+
+  audio.addEventListener('ended', playNextRandom);
 
   function removeListeners() {
     events.forEach(function(ev) {
@@ -482,13 +608,43 @@ function showCopyFeedback() {
   });
 
   audio.addEventListener('error', function() {
-    console.warn('Não foi possível carregar main.mp3. Confira se o arquivo está na mesma pasta do index.html e se o nome está exatamente main.mp3.');
+    console.warn('Não foi possível carregar ' + playlist[currentTrack] + '. Confira se o arquivo está na mesma pasta do index.html e se o nome está exatamente igual ao da lista.');
   });
 
   audio.addEventListener('timeupdate', function() {
     if (progress && audio.duration) {
       progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
     }
+  });
+})();
+</script>
+
+<script>
+// Efeitos dos botões: brilho que segue o mouse, inclinação 3D e onda ao clicar
+(function() {
+  document.querySelectorAll('.link').forEach(function(el) {
+    el.addEventListener('mousemove', function(e) {
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      el.style.setProperty('--mx', x + 'px');
+      el.style.setProperty('--my', y + 'px');
+      el.style.setProperty('--ry', ((x / r.width - 0.5) * 10) + 'deg');
+      el.style.setProperty('--rx', ((0.5 - y / r.height) * 8) + 'deg');
+    });
+    el.addEventListener('mouseleave', function() {
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+    el.addEventListener('click', function(e) {
+      const r = el.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = (e.clientX - r.left) + 'px';
+      ripple.style.top = (e.clientY - r.top) + 'px';
+      el.appendChild(ripple);
+      setTimeout(function() { ripple.remove(); }, 700);
+    });
   });
 })();
 </script>
