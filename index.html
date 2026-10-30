@@ -406,7 +406,7 @@
     <a class="link" href="https://steamcommunity.com/id/alakiban/" target="_blank" aria-label="Steam" title="Steam"><i class="fa-brands fa-steam"></i></a>
     <a class="link" href="https://open.spotify.com/user/31kcnovulikf4fcv5umkqtfclvy4" target="_blank" aria-label="Spotify" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
     <a class="link" href="https://www.instagram.com/joao_lima.c" target="_blank" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-    <a class="link" onclick="copyEpicNick()" aria-label="Epic Games" title="Epic Games"><i class="fa-solid fa-gamepad"></i></a>
+    <a class="link" onclick="copyEpicNick()" aria-label="Epic Games" title="Epic Games"><i class="fa-brands fa-epic-games" id="epicIcon"></i></a>
   </div>
 </div>
 
@@ -543,6 +543,18 @@ function showCopyFeedback() {
     }
   });
 })();
+</script>
+
+<script>
+// Ícone da Epic Games: usa o ícone de marca do Font Awesome; se essa versão não tiver, cai para o controle de videogame
+window.addEventListener('load', function() {
+  const icon = document.getElementById('epicIcon');
+  if (!icon) return;
+  const content = window.getComputedStyle(icon, '::before').content;
+  if (!content || content === 'none' || content === 'normal') {
+    icon.className = 'fa-solid fa-gamepad';
+  }
+});
 </script>
 
 </body>
