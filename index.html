@@ -251,11 +251,13 @@
 
   .links {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
   }
 
-  /* Botões: vidro escuro, brilho na cor de cada rede e reflexo ao passar o mouse */
+  /* Botões só com ícone: vidro escuro, brilho na cor de cada rede e reflexo ao passar o mouse */
   .link {
     --accent: 255, 255, 255;
     position: relative;
@@ -263,13 +265,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 16px 0;
+    width: 60px;
+    height: 60px;
     text-decoration: none;
     color: #aaa;
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px;
     background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
@@ -278,7 +277,6 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s, border-color 0.25s, box-shadow 0.25s, background 0.25s;
     cursor: pointer;
-    width: 100%;
     font-family: inherit;
   }
 
@@ -306,19 +304,18 @@
 
   .link:hover {
     color: #fff;
-    transform: translateY(-3px) scale(1.02);
+    transform: translateY(-3px) scale(1.06);
     border-color: rgba(var(--accent), 0.6);
     background: linear-gradient(135deg, rgba(var(--accent), 0.18), rgba(var(--accent), 0.04));
     box-shadow: 0 8px 28px rgba(var(--accent), 0.25), 0 0 18px rgba(var(--accent), 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
   }
 
   .link:active {
-    transform: translateY(0) scale(0.98);
+    transform: translateY(0) scale(0.97);
   }
 
   .link i {
-    font-size: 16px;
-    width: 20px;
+    font-size: 24px;
     text-align: center;
     transition: transform 0.25s, color 0.25s, text-shadow 0.25s;
   }
@@ -406,10 +403,10 @@
   <h1 class="title-glitch">zenec</h1>
 
   <div class="links">
-    <a class="link" href="https://steamcommunity.com/id/alakiban/" target="_blank"><i class="fa-brands fa-steam"></i>Steam</a>
-    <a class="link" href="https://open.spotify.com/user/31kcnovulikf4fcv5umkqtfclvy4" target="_blank"><i class="fa-brands fa-spotify"></i>Spotify</a>
-    <a class="link" href="https://www.instagram.com/joao_lima.c" target="_blank"><i class="fa-brands fa-instagram"></i>Instagram</a>
-    <a class="link" onclick="copyEpicNick()">Epic Games</a>
+    <a class="link" href="https://steamcommunity.com/id/alakiban/" target="_blank" aria-label="Steam" title="Steam"><i class="fa-brands fa-steam"></i></a>
+    <a class="link" href="https://open.spotify.com/user/31kcnovulikf4fcv5umkqtfclvy4" target="_blank" aria-label="Spotify" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
+    <a class="link" href="https://www.instagram.com/joao_lima.c" target="_blank" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    <a class="link" onclick="copyEpicNick()" aria-label="Epic Games" title="Epic Games"><i class="fa-solid fa-gamepad"></i></a>
   </div>
 </div>
 
