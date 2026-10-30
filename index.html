@@ -369,16 +369,6 @@
 <div class="wrapper">
   <h1 class="title-glitch">zenec</h1>
 
-  <div class="spotify">
-    <div class="player">
-      <div class="player-icon"><i class="fa-solid fa-music"></i></div>
-      <div class="player-info">
-        <div class="player-title">main</div>
-        <div class="player-bar"><div class="player-progress" id="playerProgress"></div></div>
-      </div>
-    </div>
-  </div>
-
   <div class="links">
     <a class="link" href="https://steamcommunity.com/id/alakiban/" target="_blank"><i class="fa-brands fa-steam"></i>Steam</a>
     <a class="link" href="https://open.spotify.com/user/31kcnovulikf4fcv5umkqtfclvy4" target="_blank"><i class="fa-brands fa-spotify"></i>Spotify</a>
@@ -496,7 +486,7 @@ function showCopyFeedback() {
   });
 
   audio.addEventListener('timeupdate', function() {
-    if (audio.duration) {
+    if (progress && audio.duration) {
       progress.style.width = (audio.currentTime / audio.duration * 100) + '%';
     }
   });
