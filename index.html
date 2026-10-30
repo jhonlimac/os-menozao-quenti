@@ -83,6 +83,19 @@
     animation: bgPulse 5s ease-in-out infinite;
   }
 
+  /* Vídeo de fundo (fica por cima do image1.png, que serve de reserva se o vídeo falhar) */
+  .bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    z-index: 0;
+    pointer-events: none;
+    animation: bgPulse 5s ease-in-out infinite;
+  }
+
   @keyframes bgPulse {
     0%, 100% { filter: brightness(0.7); }
     50% { filter: brightness(0.8); }
@@ -345,6 +358,8 @@
 </head>
 <body>
 
+<video class="bg-video" id="bgVideo" src="fundo.mp4" autoplay muted loop playsinline preload="auto"></video>
+
 <div class="glow-effects">
   <div class="glow glow-1"></div>
   <div class="glow glow-2"></div>
@@ -454,6 +469,8 @@ function showCopyFeedback() {
   }
 
   function startMusic() {
+    const bgVideo = document.getElementById('bgVideo');
+    if (bgVideo && bgVideo.paused) bgVideo.play().catch(function() {});
     if (started) return;
     audio.currentTime = 0;
     const p = audio.play();
